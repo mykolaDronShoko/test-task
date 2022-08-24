@@ -1,0 +1,119 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid d-flex justify-content-between">
+    {{ isEditMode ? "Edit: " + question?.text : "Create question" }}
+    <button class="btn btn-secondary" [routerLink]="['/questions/manage']">
+      Back
+    </button>
+  </div>
+</nav>
+<div class="alert alert-secondary mt-2" role="alert" *ngIf="!question">
+  No data
+</div>
+
+<form
+  class="row p-4"
+  #form="ngForm"
+  (ngSubmit)="onSubmit()"
+  name="form"
+  *ngIf="question"
+>
+  <div class="col-md-12 mb-3">
+    <label for="inputEmail4" class="form-label">Question</label>
+    <input
+      type="text"
+      class="form-control"
+      [(ngModel)]="question.text"
+      name="text"
+    />
+  </div>
+
+  <div class="col-12 mb-3">
+    <label class="form-check-label" for="gridCheck"> Type </label>
+
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="radio"
+        name="type"
+        id="type1"
+        [(ngModel)]="question.type"
+        [value]="questionTypes.Single"
+      />
+      <label class="form-check-label" for="type1"> Single </label>
+    </div>
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="radio"
+        name="type"
+        id="type2"
+        [(ngModel)]="question.type"
+        [value]="questionTypes.Multiple"
+      />
+      <label class="form-check-label" for="type2"> Multiple </label>
+    </div>
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="radio"
+        name="type"
+        id="type3"
+        [(ngModel)]="question.type"
+        [value]="questionTypes.Open"
+      />
+      <label class="form-check-label" for="type3"> Open </label>
+    </div>
+  </div>
+
+  <div class="col-md-6" *ngIf="question.type !== questionTypes.Open">
+    <label for="inputEmail4" class="form-label w-100">Options</label>
+
+    <div
+      class="d-flex align-items-center mb-1"
+      *ngFor="
+        let options of question.options;
+        let i = index;
+        trackBy: indexTracker
+      "
+    >
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="question.options[i].value"
+        [name]="'text' + i"
+      />
+      <button
+        class="btn btn-link btn-sm"
+        type="button"
+        (click)="removeOption(i)"
+        *ngIf="question.options.length > 2"
+      >
+        <i class="bi bi-trash3"></i>
+      </button>
+    </div>
+    <button
+      class="btn btn-link btn-sm mt-1"
+      type="button"
+      (click)="addOption()"
+    >
+      Add option
+    </button>
+  </div>
+  <div class="col-12 mt-4">
+    <button
+      type="submit"
+      class="btn btn-primary"
+      [disabled]="!checkValidation()"
+    >
+      {{ isEditMode ? "Update" : "Create" }}
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-secondary ms-1"
+      [routerLink]="['/questions/manage']"
+    >
+      Back
+    </button>
+  </div>
+</form>

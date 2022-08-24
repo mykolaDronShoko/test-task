@@ -1,0 +1,50 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid d-flex justify-content-end">
+    <button class="btn btn-success" [routerLink]="['/questions']">
+      All questions
+    </button>
+    <button
+      class="btn btn-primary ms-1"
+      [routerLink]="['/questions', 'create']"
+    >
+      Add question
+    </button>
+  </div>
+</nav>
+
+<table class="table table-hover">
+  <thead class="table-dark">
+    <tr>
+      <th scope="col">Question</th>
+      <th scope="col">Type</th>
+      <th scope="col">Date</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let question of questionsList">
+      <th>{{ question?.text }}</th>
+      <td>{{ questionTypes[question.type] }}</td>
+      <td>{{ question?.date | date: "M/d/yy, h:mm a" }}</td>
+      <td>
+        <button
+          type="button"
+          class="btn btn-link btn-sm"
+          [routerLink]="['/questions', question.id]"
+        >
+          Edit
+        </button>
+        <button
+          type="button"
+          class="btn btn-link btn-sm"
+          (click)="delete(question.id)"
+        >
+          Delete
+        </button>
+      </td>
+    </tr>
+    <tr *ngIf="_questionsService.questionsList.length === 0">
+      <th colspan="4" class="text-center">No rows data</th>
+    </tr>
+  </tbody>
+</table>

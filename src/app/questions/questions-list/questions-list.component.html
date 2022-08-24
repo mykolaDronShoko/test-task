@@ -1,0 +1,144 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div
+    class="container-fluid d-flex justify-content-between align-items-center"
+  >
+    Questions list
+    <button class="btn btn-success" [routerLink]="['/questions/manage']">
+      Manage questions
+    </button>
+  </div>
+</nav>
+
+<div
+  class="alert alert-secondary mt-2 text-center"
+  role="alert"
+  *ngIf="_questionsService.questionsList.length === 0"
+>
+  No data
+</div>
+
+<div class="row p-4" *ngIf="_questionsService.questionsList.length > 0">
+  <div class="col-md-6 border-end">
+    <h3 class="mb-3">Answered</h3>
+    <div
+      class="card mb-2"
+      *ngFor="let question of getUnansweredQuestions(); let i = index"
+    >
+      <div class="card-body">
+        <h5 class="card-title">{{ question.text }}</h5>
+
+        <div class="card-text">
+          <ng-container
+            class="mb-3"
+            *ngIf="question.type === questionTypes.Open"
+          >
+            <label class="form-label">Your answer</label>
+            <textarea
+              class="form-control"
+              [(ngModel)]="question.answer"
+              rows="3"
+            ></textarea>
+          </ng-container>
+
+          <ng-container *ngIf="question.type === questionTypes.Single">
+            <div class="form-check" *ngFor="let option of question.options">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="type"
+                [(ngModel)]="question.answer"
+                [value]="option"
+              />
+              <label class="form-check-label"> {{ option.value }} </label>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="question.type === questionTypes.Multiple">
+            <div class="form-check" *ngFor="let option of question.options">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                [name]="option.value.toString()"
+                [(ngModel)]="option.checked"
+                [value]="option"
+              />
+              <label class="form-check-label"> {{ option.value }} </label>
+            </div>
+          </ng-container>
+        </div>
+        <div class="d-flex justify-content-end">
+          <button
+            class="btn btn-success btn-sm mt-1"
+            type="button"
+            (click)="getAnswer(question.id, true)"
+            [disabled]="!checkDisable(question)"
+          >
+            Answer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <h3 class="mb-3">Unanswered</h3>
+
+    <div class="card mb-2" *ngFor="let question of getAnsweredQuestions()">
+      <div class="card-body">
+        <h5 class="card-title">{{ question.text }}</h5>
+
+        <div class="card-text">
+          <ng-container
+            class="mb-3"
+            *ngIf="question.type === questionTypes.Open"
+          >
+            <label class="form-label">Your answer</label>
+            <textarea
+              class="form-control"
+              [(ngModel)]="question.answer"
+              rows="3"
+              disabled
+            ></textarea>
+          </ng-container>
+
+          <ng-container *ngIf="question.type === questionTypes.Single">
+            <div class="form-check" *ngFor="let option of question.options">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="type"
+                [(ngModel)]="question.answer"
+                [value]="option"
+                disabled
+              />
+              <label class="form-check-label"> {{ option.value }} </label>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="question.type === questionTypes.Multiple">
+            <div class="form-check" *ngFor="let option of question.options">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                [name]="option.value.toString()"
+                [(ngModel)]="option.checked"
+                [value]="option"
+                disabled
+              />
+              <label class="form-check-label"> {{ option.value }} </label>
+            </div>
+          </ng-container>
+        </div>
+        <div class="d-flex justify-content-end">
+          <button
+            class="btn btn-danger btn-sm mt-1"
+            type="button"
+            (click)="getAnswer(question.id, false)"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
