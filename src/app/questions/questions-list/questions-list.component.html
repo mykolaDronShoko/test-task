@@ -19,7 +19,8 @@
 
 <div class="row p-4" *ngIf="_questionsService.questionsList.length > 0">
   <div class="col-md-6 border-end">
-    <h3 class="mb-3">Answered</h3>
+    <h3 class="mb-3">Unanswered</h3>
+
     <div
       class="card mb-2"
       *ngFor="let question of getUnansweredQuestions(); let i = index"
@@ -81,7 +82,7 @@
   </div>
 
   <div class="col-md-6">
-    <h3 class="mb-3">Unanswered</h3>
+    <h3 class="mb-3">Answered</h3>
 
     <div class="card mb-2" *ngFor="let question of getAnsweredQuestions()">
       <div class="card-body">
